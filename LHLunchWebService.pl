@@ -11,13 +11,13 @@ use LHLunch;
 
 my $_lhl; # delay creation
 
-get '/' => sub {
+get '/lunch' => sub {
    my $self = shift;
    $self->render('index');
 };
 
 # trying new variant
-get '/lindholmen' => sub {
+get '/lunch/lindholmen' => sub {
    my $self = shift;
    $_lhl //= LHLunch->new;
    $self->stash(_lhl => $_lhl);

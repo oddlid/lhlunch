@@ -11,6 +11,11 @@ use LHLunch;
 
 my $_lhl; # delay creation
 
+get '/' => sub {
+   my $self = shift;
+   $self->render('index');
+};
+
 # trying new variant
 get '/lindholmen' => sub {
    my $self = shift;
@@ -53,5 +58,15 @@ __DATA__
    </body>
 </html>
 
+@@ index.html.ep
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Lunch</title>
+   </head>
+   <body>
+      %= link_to Lindholmen => 'lindholmen'
+   </body>
+</html>
 
 __END__

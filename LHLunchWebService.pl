@@ -23,9 +23,9 @@ get '/lunch/lindholmen' => sub {
    $self->stash(_lhl => $_lhl);
 
    $self->respond_to(
-      json => sub        { $self->render_json($_lhl->as_struct) },
-      txt  => { format   => 'txt' },
-      any  => { template => 'lindholmen' },
+      json => sub { $self->render_json($_lhl->as_struct) },
+      txt => { template => 'lindholmen', format => 'txt' },
+      any => { template => 'lindholmen', format => 'html' },
    );
 };
 

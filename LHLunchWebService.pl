@@ -4,7 +4,6 @@
 
 # Automatically enables strict and warnings + 5.10 features
 use Mojolicious::Lite;
-#use Mojo::Util 'encode';
 use Data::Dumper;
 use FindBin;
 use lib "$FindBin::Bin";
@@ -12,19 +11,22 @@ use LHLunch;
 
 my $_lhl; # delay creation
 
-get 'lindholmen' => sub {
+# trying new variant
+get '/lindholmen' => sub {
    my $self = shift;
    $_lhl //= LHLunch->new;
    $self->stash(_lhl => $_lhl);
-   $self->render('lindholmen');
+
+   $self->respond_to(
+      json => sub        { $self->render_json($_lhl->as_struct) },
+      txt  => { format   => 'txt' },
+      any  => { template => 'lindholmen' },
+   );
 };
 
 app->start;
 
 __DATA__
-
-@@ lindholmen.json.ep
-%= $_lhl->as_json
 
 @@ lindholmen.txt.ep
 % my $struct = $_lhl->as_struct;

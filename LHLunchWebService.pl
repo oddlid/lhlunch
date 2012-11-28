@@ -50,13 +50,26 @@ __DATA__
 % }
 
 @@ lindholmen.html.ep
+% my $struct = $_lhl->as_struct;
 <!DOCTYPE html>
 <html>
    <head>
       <title>Lindholmen Lunch</title>
    </head>
    <body>
-      Not ready...
+      <ul>
+      % foreach my $r (@$struct) {
+         <li><%= $r->{name} %></li>
+         <ul>
+         % foreach my $d (@{$r->{dishes}}) {
+            <li><strong><%= $d->{dish} %></strong> 
+               <%= $d->{desc} %><br />
+               <%= $d->{price} %>,-
+            </li>
+         % }
+         </ul>
+      % }
+      </ul>
    </body>
 </html>
 

@@ -11,6 +11,8 @@ use LHLunch;
 
 my $_lhl; # delay creation
 
+app->config(hypnotoad => { listen => ['http://127.0.0.1:3000'] });
+
 get '/lunch' => sub {
    my $self = shift;
    $self->render('index');

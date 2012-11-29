@@ -79,6 +79,13 @@ sub scrape {
    $self->{state} |= STATE_READY;
 }
 
+sub clear {
+   my $self = shift;
+   $self->{menu}  = [];
+   $self->{state} = STATE_BASE;
+   return $self;
+}
+
 sub as_struct {
    my $self = shift;
    $self->scrape unless ($self->{state} & STATE_READY);

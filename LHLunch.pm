@@ -104,10 +104,9 @@ sub scrape {
 }
 
 sub clear {
-   my $self = shift;
-   my $menu = shift;
-   $self->{menu}  = $menu;  # possible to pass a new menu here, or it's undef/reset by default
-   if (!$menu) {
+   my $self      = shift;
+   $self->{menu} = shift;    # possible to pass a new menu here, or it's undef/reset by default
+   if (!ref($self->{menu})) {
       $self->{state} = STATE_BASE;
    }
    else {
@@ -120,8 +119,7 @@ sub reload {
    # Call this with no param, and the object is just reset, OR:
    # Pass a menu structure to start from saved state
    my $self = shift;
-   my $menu = shift;
-   return $self->clear($menu);
+   return $self->clear(shift);
 }
 
 sub ready {

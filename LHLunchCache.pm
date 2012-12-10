@@ -51,7 +51,7 @@ sub cache {
 
    if ($self->{lhl}->ready) {
       if ($dt_parsed->ymd('') < $dt_now->ymd('')) {    # midnight has passed
-         $self->{lhl}->scrape;
+         $self->{lhl}->clear->scrape;
       }
    }
    else {

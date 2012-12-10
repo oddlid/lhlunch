@@ -70,7 +70,7 @@ sub cache {
       }
    }
 
-   if ($self->stamp <= $self->{lhl}->stamp) {
+   if ($self->stamp < $self->{lhl}->stamp) {
       $self->stamp($self->{lhl}->stamp);
       Storable::nstore($self->{lhl}{menu}, $self->cache_file);
    }

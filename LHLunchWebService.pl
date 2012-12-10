@@ -4,12 +4,13 @@
 
 # Automatically enables strict and warnings + 5.10 features
 use Mojolicious::Lite;
+use DateTime;
 use Data::Dumper;
 use FindBin;
 use lib "$FindBin::Bin";
-use LHLunch;
+use LHLunchCache;
 
-my $_lhl; # delay creation
+my $_lhlc; # delay creation
 
 app->config(hypnotoad => { listen => ['http://127.0.0.1:3000'] });
 
@@ -18,14 +19,13 @@ get '/lunch' => sub {
    $self->render('index');
 };
 
-# trying new variant
 get '/lunch/lindholmen' => sub {
    my $self = shift;
-   $_lhl //= LHLunch->new;
-   $self->stash(_lhl => $_lhl);
+   $_lhlc //= LHLunchCache->new('/tmp/lunchcache.dat');
+   $self->stash(_lhlc => $_lhlc);
 
    $self->respond_to(
-      json => sub { $self->render_json($_lhl->as_struct) },
+      json => sub { $self->render_json($_lhlc->cache) },
       txt => { template => 'lindholmen', format => 'txt' },
       any => { template => 'lindholmen', format => 'html' },
    );
@@ -36,7 +36,7 @@ app->start;
 __DATA__
 
 @@ lindholmen.txt.ep
-% my $struct = $_lhl->as_struct;
+% my $struct = $_lhlc->cache;
 % foreach my $r (@$struct) {
    -----------------------------------------------------------------------
    %= $r->{name}
@@ -50,7 +50,7 @@ __DATA__
 % }
 
 @@ lindholmen.html.ep
-% my $struct = $_lhl->as_struct;
+% my $struct = $_lhlc->cache;
 <!DOCTYPE html>
 <html>
    <head>
@@ -59,7 +59,7 @@ __DATA__
    <body>
       <ul>
       % foreach my $r (@$struct) {
-         <li><%= $r->{name} %></li>
+         <li><%= link_to $r->{url} => begin %><%= $r->{name} %><% end %></li>
          <ul>
          % foreach my $d (@{$r->{dishes}}) {
             <li><strong><%= $d->{dish} %></strong> 
@@ -70,6 +70,9 @@ __DATA__
          </ul>
       % }
       </ul>
+      <div>
+         Last updated: <%= DateTime->from_epoch(epoch => $_lhlc->stamp)->datetime %>
+      </div>
    </body>
 </html>
 

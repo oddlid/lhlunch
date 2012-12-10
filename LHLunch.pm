@@ -10,10 +10,8 @@ use utf8;
 use threads;
 
 use Mojo::UserAgent;
-use Mojo::JSON;
-#use Mojo::Util 'encode';
 use FindBin;
-use Data::Dumper;
+#use Data::Dumper;
 
 use lib "$FindBin::Bin";
 use LHLunchConfig;
@@ -23,19 +21,41 @@ use constant STATE_QUEUED => STATE_BASE << 1;
 use constant STATE_READY  => STATE_BASE << 2;
 
 sub new {
-   return (bless({ src => [@LHLunchConfig::sources], state => STATE_BASE }, shift));
+   return (
+      bless(
+         {  src   => [@LHLunchConfig::sources],
+            state => STATE_BASE,
+            menu  => undef,
+            born  => time,
+            stamp => time
+         },
+         shift
+      )
+   );
 }
 
-#sub _e {
-#   return encode('UTF-8', shift);
-#}
+sub stamp {
+   my $self = shift;
+   $self->{stamp} = shift if (@_);
+   return $self->{stamp};
+}
 
+sub menu {
+   my $self = shift;
+   $self->{menu} = shift if (@_);
+   return $self->{menu};
+}
+
+# Note, this sub is NOT object oriented!
+# As it does not access other data than what it gets passed, 
+# this part could be moved away and set to a callback/code ref defined by 
+# the subscribing module. This way, it could be easier to adjust the parsing 
+# depending on the format of the HTML source from the websites.
+# ...
 sub parse_restaurant {
    my $r  = shift;
-   my $n  = $r->{name};
-   my $u  = $r->{url};
-   my $ua = Mojo::UserAgent->new();
-   my $tx = $ua->get($u);
+   my $ua = Mojo::UserAgent->new;
+   my $tx = $ua->get($r->{url});
    my @d;
    $tx->res->dom('tbody > tr > td[class*="views-field-title"]')->each(
       sub {
@@ -49,7 +69,7 @@ sub parse_restaurant {
       $price =~ s/[^0-9]//g;
       push(@{ $d[$i] }, $price);
    }
-   return ($n, $u, [ map { { dish => $_->[0], desc => $_->[1], price => $_->[2] } } @d ]);
+   return ($r->{name}, $r->{url}, [ map { { dish => $_->[0], desc => $_->[1], price => $_->[2] } } @d ]);
 }
 
 sub init {
@@ -59,53 +79,69 @@ sub init {
          threads->create({ context => 'list' }, 'parse_restaurant', $_);
       }
    }
-   ->join();
+   ->join;
    $self->{state} |= STATE_QUEUED;
+   return $self;
 }
 
 sub scrape {
    my $self = shift;
    $self->init unless ($self->{state} & STATE_QUEUED);
-   foreach (threads->list()) {
-      my @r_data = $_->join();
-      my $ret    = {
+   my $ret;    # want to save an instance for after the loop
+   foreach (threads->list) {
+      my @r_data = $_->join;
+      $ret = {
          name   => shift(@r_data),
-         src    => shift(@r_data),
+         url    => shift(@r_data),
          date   => time,
          dishes => @r_data,
       };
       push(@{ $self->{menu} }, $ret);
    }
    $self->{state} |= STATE_READY;
+   $self->stamp($ret->{date});    # date of last page parsed
+   return $self;
 }
 
 sub clear {
    my $self = shift;
-   $self->{menu}  = [];
-   $self->{state} = STATE_BASE;
+   my $menu = shift;
+   $self->{menu}  = $menu;  # possible to pass a new menu here, or it's undef/reset by default
+   if (!$menu) {
+      $self->{state} = STATE_BASE;
+   }
+   else {
+      $self->{state} |= STATE_READY;
+   }
    return $self;
 }
 
-sub as_struct {
+sub reload {
+   # Call this with no param, and the object is just reset, OR:
+   # Pass a menu structure to start from saved state
    my $self = shift;
-   $self->scrape unless ($self->{state} & STATE_READY);
-   return $self->{menu};
+   my $menu = shift;
+   return $self->clear($menu);
 }
 
-sub as_json {
+sub ready {
    my $self = shift;
-   $self->{json} //= Mojo::JSON->new;
-   $self->scrape unless ($self->{state} & STATE_READY);
-   return ($self->{json}->encode($self->{menu}));
+   return ($self->{state} & STATE_READY && ref($self->{menu}) eq 'ARRAY');
 }
 
-sub as_xml {
-   my $self = shift;
-   return sprintf("TODO: implement %s::as_xml()", $$self)
-}
-
-#print("Data in JSON format: \n\n", __PACKAGE__->new->as_json, "\n") unless caller;
-print(Dumper(__PACKAGE__->new->as_struct)) unless caller;;
+#sub as_struct {
+#   my $self = shift;
+#   $self->scrape unless ($self->{state} & STATE_READY);
+#   return $self->{menu};
+#}
+#
+#sub as_json {
+#   my $self = shift;
+#   $self->{json} //= Mojo::JSON->new;
+#   return ($self->{json}->encode($self->as_struct()));
+#}
+#
+#print(Dumper(__PACKAGE__->new->as_struct)) unless caller;
 
 1;
 __END__

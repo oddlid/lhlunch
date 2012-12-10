@@ -5,6 +5,8 @@
 
 package LHLunchConfig;
 
+use utf8;
+
 our @sources = (
    {  name => q/Bistrot/,
       url  => 'http://www.lindholmen.se/sv/restaurang/bistrot',

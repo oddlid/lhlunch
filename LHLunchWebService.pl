@@ -57,6 +57,7 @@ __DATA__
       <title>Lindholmen Lunch</title>
    </head>
    <body>
+      <!-- Get the perl behind this at: https://github.com/oddlid/lhlunch -->
       <ul>
       % foreach my $r (@$struct) {
          <li><%= link_to $r->{url} => begin %><%= $r->{name} %><% end %></li>

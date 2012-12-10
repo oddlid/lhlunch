@@ -46,8 +46,3 @@ our @sources = (
 
 1;
 __END__
-
-
-hej jag heter odd och är norsk
-pacman är min kompis
-nej:q

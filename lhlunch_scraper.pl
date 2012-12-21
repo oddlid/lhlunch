@@ -5,35 +5,41 @@
 #
 # Odd Eivind Ebbesen <odd@oddware.net>, 2012-11-26 11:40:01
 
+use feature ();
 use strict;
 use warnings;
+use utf8;
 
 use Getopt::Long;
 use FindBin;
 use FileHandle;
+use Mojo::JSON;
 
 use lib "$FindBin::Bin";
-use LHLunch;
+use LHLunchCache;
 
 
-my $_lhl;
-my $_opts = { ofile => '/tmp/lunch.json' };
+my $_opts = { 
+   ofile => '/tmp/lunch.json',
+   cfile => '/tmp/lunchcache.dat'
+};
 
 sub usage {
-   print(STDERR "Usage: $0 ... \n");
+   print(STDERR "Usage: $0 [ --output=<path> --cache=<path> ] \n");
    return 1;
 }
 
 sub scrape {
-   my $fh = shift;
-   $_lhl = LHLunch->new() unless ($_lhl);
-   my $res = $_lhl->as_json();
-   $fh->print($res);
+   my $fh   = shift;
+   my $lhlc = LHLunchCache->new($_opts->{cfile});
+   my $json = Mojo::JSON->new;
+   $fh->print($json->encode($lhlc->cache));
 }
 
 GetOptions(
-   "output" => \$_opts->{ofile},
-   "help"   => sub { usage; exit 0; },
+   "output=s" => \$_opts->{ofile},
+   "cache=s"  => \$_opts->{cfile},
+   "help"     => sub { usage; exit 0; },
 ) or usage and exit 1;
 
 if ($_opts->{ofile} eq '-') {

@@ -14,12 +14,12 @@ my $_lhlc; # delay creation
 
 app->config(hypnotoad => { listen => ['http://127.0.0.1:3000'] });
 
-get '/lunch' => sub {
+get '/' => sub {
    my $self = shift;
    $self->render('index');
 };
 
-get '/lunch/lindholmen' => sub {
+get '/lindholmen' => sub {
    my $self = shift;
    $_lhlc //= LHLunchCache->new('/tmp/lunchcache.dat');
    $self->stash(_lhlc => $_lhlc);

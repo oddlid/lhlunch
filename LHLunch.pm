@@ -127,12 +127,12 @@ sub ready {
    return ($self->{state} & STATE_READY && ref($self->{menu}) eq 'ARRAY');
 }
 
-#sub as_struct {
-#   my $self = shift;
-#   $self->scrape unless ($self->{state} & STATE_READY);
-#   return $self->{menu};
-#}
-#
+sub as_struct {
+   my $self = shift;
+   $self->scrape unless ($self->{state} & STATE_READY);
+   return $self->{menu};
+}
+
 #sub as_json {
 #   my $self = shift;
 #   $self->{json} //= Mojo::JSON->new;

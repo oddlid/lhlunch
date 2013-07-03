@@ -25,25 +25,28 @@ my $_opts = {
 };
 
 sub usage {
-   print(STDERR "Usage: $0 [ --output=<path> --cache=<path> ] \n");
+   print(STDERR "Usage: $0 [ --output=<path> --cache=<path> [ --nocache ] ] \n");
    return 1;
 }
 
 sub scrape {
+   # Does a fresh or cached scrape depending of flag --nocache
+   # and prints the result as JSON to given filehandle.
    my $fh   = shift;
-   my $lhlc = LHLunchCache->new($_opts->{cfile});
+   my $lhlc = $_opts->{nocache} ? LHLunch->new : LHLunchCache->new($_opts->{cfile});
    my $json = Mojo::JSON->new;
-   $fh->print($json->encode($lhlc->cache));
+   $fh->print($json->encode($lhlc->as_struct));
 }
 
 GetOptions(
    "output=s" => \$_opts->{ofile},
    "cache=s"  => \$_opts->{cfile},
+   "nocache"  => \$_opts->{nocache},
    "help"     => sub { usage; exit 0; },
 ) or usage and exit 1;
 
 if ($_opts->{ofile} eq '-') {
-   scrape(FileHandle->new_from_fd(\*STDOUT));
+   scrape(FileHandle->new_from_fd(\*STDOUT, 'w'));
 }
 else {
    scrape(FileHandle->new(">$_opts->{ofile}"));

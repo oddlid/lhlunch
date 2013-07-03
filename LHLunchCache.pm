@@ -67,14 +67,14 @@ sub cache {
             $self->{lhl}->scrape;
          }
          else {
-         		# need to check age here before just reloading...
-         		my $dt_cache = DateTime->from_epoch(epoch => $data->[0]{date});
-         		if (!is_fresh($dt_cache, $dt_now)) {
-         			$self->{lhl}->scrape;
-         		}
-         		else {
-            		$self->{lhl}->reload($data);
-            	}
+            # need to check age here before just reloading...
+            my $dt_cache = DateTime->from_epoch(epoch => $data->[0]{date});
+            if (!is_fresh($dt_cache, $dt_now)) {
+               $self->{lhl}->scrape;
+            }
+            else {
+               $self->{lhl}->reload($data);
+            }
          }
       }
       else {
@@ -88,6 +88,12 @@ sub cache {
    }
 
    return $self->{lhl}{menu};
+}
+
+sub as_struct {
+   # Just an alias to create the same API for this module and
+   # LHLunch.pm so they're interchangable.
+   return shift->cache;
 }
 
 

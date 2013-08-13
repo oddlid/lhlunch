@@ -167,7 +167,9 @@ __DATA__
       <title>Lunch</title>
    </head>
    <body>
-      %= link_to Lindholmen => 'lindholmen'
+      <%= link_to 'Lindholmen (html)' => 'lindholmen.html' %><br />
+      <%= link_to 'Lindholmen (text)' => 'lindholmen.txt' %><br />
+      <%= link_to 'Lindholmen (json)' => 'lindholmen.json' %><br />
    </body>
 </html>
 

@@ -45,14 +45,17 @@ sub cache_file {
 }
 
 sub is_fresh {
-	my ($dt_cache, $dt_cmp) = @_;	# assumed to be DateTime instances
-	return ($dt_cache->ymd('') == $dt_cmp->ymd(''));	# within same day
+   # Change the logic here to re-scrape at other intervals
+   my ($dt_cache, $dt_cmp) = @_;                       # assumed to be DateTime instances
+   #return ($dt_cache->ymd('') == $dt_cmp->ymd(''));    # within same day
+   my $dt_1hour = $dt_cache->clone->add(hours => 1);
+   return ($dt_cmp <= $dt_1hour);
 }
 
 sub cache {
    my $self      = shift;
-   my $dt_parsed = DateTime->from_epoch(epoch => $self->{lhl}->stamp);
-   my $dt_now    = DateTime->now;
+   my $dt_parsed = DateTime->from_epoch(epoch => $self->{lhl}->stamp)->set_time_zone('floating');
+   my $dt_now    = DateTime->now(time_zone => 'floating');
 
    if ($self->{lhl}->ready) {
       if (!is_fresh($dt_parsed, $dt_now)) {    # midnight has passed
@@ -68,7 +71,7 @@ sub cache {
          }
          else {
             # need to check age here before just reloading...
-            my $dt_cache = DateTime->from_epoch(epoch => $data->[0]{date});
+            my $dt_cache = DateTime->from_epoch(epoch => $data->[0]{date})->set_time_zone('floating');
             if (!is_fresh($dt_cache, $dt_now)) {
                $self->{lhl}->scrape;
             }

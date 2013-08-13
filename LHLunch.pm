@@ -11,7 +11,6 @@ use threads;
 
 use Mojo::UserAgent;
 use FindBin;
-#use Data::Dumper;
 
 use lib "$FindBin::Bin";
 use LHLunchConfig;

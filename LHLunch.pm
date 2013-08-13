@@ -51,31 +51,32 @@ sub menu {
 # the subscribing module. This way, it could be easier to adjust the parsing 
 # depending on the format of the HTML source from the websites.
 # ...
-sub parse_restaurant {
-   my $r  = shift;
-   my $ua = Mojo::UserAgent->new;
-   my $tx = $ua->get($r->{url});
-   my @d;
-   $tx->res->dom('tbody > tr > td[class*="views-field-title"]')->each(
-      sub {
-         my $e = shift;
-         push(@d, [ $e->children->first->text, $e->text ]);
-      }
-   );
-   my @p = $tx->res->dom('tbody > tr > td[class*="views-field-field-price-value"]')->each;
-   for (my $i = 0; $i < @p; $i++) {
-      my $price = $p[$i]->text;
-      $price =~ s/[^0-9]//g;
-      push(@{ $d[$i] }, $price);
-   }
-   return ($r->{name}, $r->{url}, [ map { { dish => $_->[0], desc => $_->[1], price => $_->[2] } } @d ]);
-}
+#sub parse_restaurant {
+#   my $r  = shift;
+#   my $ua = Mojo::UserAgent->new;
+#   my $tx = $ua->get($r->{url});
+#   my @d;
+#   $tx->res->dom('tbody > tr > td[class*="views-field-title"]')->each(
+#      sub {
+#         my $e = shift;
+#         push(@d, [ $e->children->first->text, $e->text ]);
+#      }
+#   );
+#   my @p = $tx->res->dom('tbody > tr > td[class*="views-field-field-price-value"]')->each;
+#   for (my $i = 0; $i < @p; $i++) {
+#      my $price = $p[$i]->text;
+#      $price =~ s/[^0-9]//g;
+#      push(@{ $d[$i] }, $price);
+#   }
+#   return ($r->{name}, $r->{url}, [ map { { dish => $_->[0], desc => $_->[1], price => $_->[2] } } @d ]);
+#}
 
 sub init {
    my $self = shift;
    async {
       foreach (@{ $self->{src} }) {
-         threads->create({ context => 'list' }, 'parse_restaurant', $_);
+         #threads->create({ context => 'list' }, 'parse_restaurant', $_);
+         threads->create({ context => 'list' }, $_->{parser}, $_);
       }
    }
    ->join;

@@ -13,6 +13,7 @@ use lib "$FindBin::Bin";
 use LHLunchCache;
 
 my $_lhlc; # delay creation
+my $_nocache = (defined($ENV{LHL_NOCACHE}) ? 1 : 0);
 
 app->config(hypnotoad => { listen => ['http://*:3000'], proxy => 1 });
 #app->secret(qx(dd if=/dev/urandom bs=512 count=1));
@@ -24,7 +25,7 @@ get '/' => sub {
 
 get '/lindholmen' => sub {
    my $self = shift;
-   $_lhlc //= LHLunchCache->new('/tmp/lunchcache.dat');
+   $_lhlc //= ($_nocache ? LHLunch->new : LHLunchCache->new('/tmp/lunchcache.dat'));
    $self->stash(_lhlc => $_lhlc);
 
    $self->respond_to(

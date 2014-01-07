@@ -4,17 +4,39 @@ cd $(dirname $0)
 
 script="LHLunchWebService.pl"
 
-if [[ $1 == "start" ]] ; then
-   MOJO_REACTOR=Mojo::Reactor::Poll /usr/bin/vendor_perl/hypnotoad $script
-elif [[ $1 == "stop" ]] ; then
-   /usr/bin/vendor_perl/hypnotoad --stop $script
-elif [[ $1 == "restart" ]]; then
-   /usr/bin/vendor_perl/hypnotoad --stop $script
-   sleep 2
-   MOJO_REACTOR=Mojo::Reactor::Poll /usr/bin/vendor_perl/hypnotoad $script
-elif [[ $1 == "status" ]] ; then
-   ps aux | grep $script | grep -v grep
-else
-   echo "Usage: $0 < start | status | stop >"
-fi
+ht=/usr/bin/vendor_perl/hypnotoad
 
+function _start() 
+{
+   MOJO_REACTOR=Mojo::Reactor::Poll $ht $script
+}
+
+function _stop() 
+{
+   $ht --stop $script
+}
+
+function _restart()
+{
+   _stop
+   sleep 2
+   _start
+}
+
+case "$1" in 
+   start)
+      _start
+      ;;
+   stop)
+      _stop
+      ;;
+   restart)
+      _restart
+      ;;
+   status)
+      ps aux | grep $script | grep -v grep
+      ;;
+   *)
+      echo "Usage: $0 < start | stop | restart | status >"
+      ;;
+esac

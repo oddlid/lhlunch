@@ -15,7 +15,7 @@ use LHLunchCache;
 my $_lhlc; # delay creation
 
 app->config(hypnotoad => { listen => ['http://*:3000'], proxy => 1 });
-app->secret(qx(dd if=/dev/urandom bs=512 count=1));
+#app->secret(qx(dd if=/dev/urandom bs=512 count=1));
 
 get '/' => sub {
    my $self = shift;

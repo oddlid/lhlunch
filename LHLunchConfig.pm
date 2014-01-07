@@ -73,8 +73,8 @@ our @sources = (
       url    => 'http://www.lindholmen.se/sv/restaurang/restaurang-aran',
       parser => $parser,
    },
-   {  name   => q/Spacys/,
-      url    => 'http://www.lindholmen.se/sv/restaurang/spacys-lindholmen',
+   {  name   => q/Sweet and sour/,
+      url    => 'http://www.lindholmen.se/sv/restaurang/sweet-and-sour',
       parser => $parser,
    },
 );

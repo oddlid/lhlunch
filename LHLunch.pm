@@ -19,9 +19,11 @@ use constant STATE_BASE   => 0x0001;
 use constant STATE_QUEUED => STATE_BASE << 1;
 use constant STATE_READY  => STATE_BASE << 2;
 
+my $_singleton;
+
 sub new {
    return (
-      bless(
+      $_singleton //= bless(
          {  src   => [@LHLunchConfig::sources],
             state => STATE_BASE,
             menu  => undef,

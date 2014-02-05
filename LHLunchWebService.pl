@@ -129,6 +129,15 @@ __DATA__
             div.dish span.price:after {
                content: ",-";
             }
+            summary::-webkit-details-marker {
+               display: none;
+            }
+            summary {
+               outline-style: none;
+            }
+            summary:focus {
+               outline-style: none;
+            }
          /*]]>*/
       </style>
    </head>
@@ -136,26 +145,30 @@ __DATA__
       <!-- Get the perl behind this at: https://github.com/oddlid/lhlunch -->
       <div id="content">
          <h1 class="pghdr">Lunch at Lindholmen today</h1>
-         % foreach my $r (@$struct) {
-            % next unless (scalar(@{$r->{dishes}}) > 0);
-            % my $dt = DateTime->from_epoch(epoch => $r->{date});
-            % my $dt_fmt = $dt->ymd('-') . ' ' . $dt->hms(':');
-            <div class="restaurant">
-            <h2 class="name">
-               <a href="<%= $r->{url} %>"><%= $r->{name} %></a>
-               <span class="parsed"><%= $dt_fmt %></span>
-            </h2>
-            <div class="dishes">
-            % foreach my $d (@{$r->{dishes}}) {
-               <div class="dish">
-                  <h3 class="name"><%= $d->{dish} %></h3>
-                  <p class="desc"><%= $d->{desc} %></p>
-                  <span class="price"><%= $d->{price} %></span>
-               </div> <!-- div dish -->
-            % }
-            </div>   <!-- div dishes -->
-         </div>  <!-- div restaurant -->
-         % }
+      % foreach my $r (@$struct) {
+         % next unless (scalar(@{$r->{dishes}}) > 0);
+         % my $dt = DateTime->from_epoch(epoch => $r->{date});
+         % my $dt_fmt = $dt->ymd('-') . ' ' . $dt->hms(':');
+         <div class="restaurant">
+            <details>
+               <summary>
+                  <h2 class="name">
+                     <a href="<%= $r->{url} %>"><%= $r->{name} %></a>
+                     <span class="parsed"><%= $dt_fmt %></span>
+                  </h2>
+               </summary>
+               <div class="dishes">
+               % foreach my $d (@{$r->{dishes}}) {
+                  <div class="dish">
+                     <h3 class="name"><%= $d->{dish} %></h3>
+                     <p class="desc"><%= $d->{desc} %></p>
+                     <span class="price"><%= $d->{price} %></span>
+                  </div> <!-- div dish -->
+               % }
+               </div> <!-- div dishes -->
+            </details>
+         </div> <!-- div restaurant -->
+      % }
       </div> <!-- div content -->
    </body>
 </html>

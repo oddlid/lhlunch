@@ -138,22 +138,46 @@ __DATA__
             summary:focus {
                outline-style: none;
             }
-            span.exp {
-               font-size   : 0.4em;
-               margin-left : 5em;
-               color       : #ccc;
-               cursor      : pointer;
+            summary:after {
+               content: "+";
             }
-            span.exp:before {
-               content: "[ expand/collapse ]";
+            details[open] summary:after {
+               content: "-";
+            }
+            h1.pghdr span.toggledetails {
+               font-size: 0.5em;
+               color: #fff;
+               float: right;
+               cursor: pointer;
             }
          /*]]>*/
       </style>
+      <script type="text/javascript">
+         /*<![CDATA[*/
+
+         var _open = false;
+
+         function toggledetail() {
+            var ds = document.getElementsByTagName("details");
+            var len = ds.length;
+            for (var i = 0; i < len; i++) {
+               if (_open) {
+                  ds[i].removeAttribute("open");
+               }
+               else {
+                  ds[i].setAttribute("open", "");
+               }
+            }
+            _open = !_open;
+         }
+
+         /*]]>*/
+      </script>
    </head>
    <body>
       <!-- Get the perl behind this at: https://github.com/oddlid/lhlunch -->
       <div id="content">
-         <h1 class="pghdr">Lunch at Lindholmen today</h1>
+         <h1 class="pghdr">Lunch at Lindholmen today <span class="toggledetails" onclick="toggledetail();">[ +/- ]</span></h1>
       % foreach my $r (@$struct) {
          % next unless (scalar(@{$r->{dishes}}) > 0);
          % my $dt = DateTime->from_epoch(epoch => $r->{date});
@@ -163,7 +187,6 @@ __DATA__
                <summary>
                   <h2 class="name">
                      <a href="<%= $r->{url} %>"><%= $r->{name} %></a>
-                     <span class="exp">&nbsp;</span>
                      <span class="parsed"><%= $dt_fmt %></span>
                   </h2>
                </summary>

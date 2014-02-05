@@ -89,6 +89,9 @@ __DATA__
                border-radius : 2em;
                padding       : 0.8em;
             }
+            h2.name {
+               margin-top: 0em;
+            }
             h2.name a {
                color     : #eee;
                font-size : 1.1em;
@@ -113,6 +116,7 @@ __DATA__
                border-radius : 2em;
                padding       : 0.7em;
                margin-bottom : 0.5em;
+               overflow      : auto;
             }
             div.dish h3.name {
                color       : #cf6;
@@ -120,10 +124,10 @@ __DATA__
                display     : inline;
             }
             div.dish p.desc {
-               display: inline;
+               display : inline;
             }
             div.dish span.price {
-               font-size : 1.3em;
+               font-size : 1.1em;
                float     : right;
             }
             div.dish span.price:after {
@@ -134,21 +138,26 @@ __DATA__
             }
             summary {
                outline-style: none;
+               color       : #369;
+               font-weight : bold;
+               cursor      : help;
             }
             summary:focus {
                outline-style: none;
             }
             summary:after {
-               content: "+";
+               content     : "[ + ]";
+               font-size   : 0.6em;
+               margin-left : 2em;
             }
             details[open] summary:after {
-               content: "-";
+               content: "[ - ]";
             }
             h1.pghdr span.toggledetails {
-               font-size: 0.5em;
-               color: #fff;
-               float: right;
-               cursor: pointer;
+               font-size : 0.5em;
+               color     : #fff;
+               float     : right;
+               cursor    : pointer;
             }
          /*]]>*/
       </style>

@@ -189,7 +189,7 @@ __DATA__
          <h1 class="pghdr">Lunch at Lindholmen today <span class="toggledetails" onclick="toggledetail();">[ +/- ]</span></h1>
       % foreach my $r (@$struct) {
          % next unless (scalar(@{$r->{dishes}}) > 0);
-         % my $dt = DateTime->from_epoch(epoch => $r->{date});
+         % my $dt = DateTime->from_epoch(epoch => $r->{date}, time_zone => 'Europe/Stockholm');
          % my $dt_fmt = $dt->ymd('-') . ' ' . $dt->hms(':');
          <div class="restaurant">
             <details>

@@ -65,66 +65,66 @@ __DATA__
       <style type="text/css" media="screen">
          /*<![CDATA[*/
             body {
-               font-family: sans-serif;
-               font-size: 1.2em;
-               background: #000;
+               font-family : sans-serif;
+               font-size   : 1.2em;
+               background  : #000;
             }
             div#content {
-               background: #369;
-               border-radius: 2em;
-               padding: 2em;
+               background    : #369;
+               border-radius : 2em;
+               padding       : 2em;
             }
             h1.pghdr {
-               color: #dd9;
+               color : #dd9;
             }
             div.restaurant {
-               background: #eeb;
-               border-radius: 2em;
-               padding: 1em;
-               margin-bottom: 0.7em;
+               background    : #eeb;
+               border-radius : 2em;
+               padding       : 1em;
+               margin-bottom : 0.7em;
             }
             div.restaurant h2.name {
-               background: #69c;
-               font-weight: bold;
-               border-radius: 2em;
-               padding: 0.8em;
+               background    : #69c;
+               font-weight   : bold;
+               border-radius : 2em;
+               padding       : 0.8em;
             }
             h2.name a {
-               color: #eee;
-               font-size: 1.1em;
+               color     : #eee;
+               font-size : 1.1em;
             }
             h2.name span.parsed {
-               font-size: 0.5em;
-               color: #eee;
-               float: right;
+               font-size : 0.5em;
+               color     : #eee;
+               float     : right;
             }
             h2.name span.parsed:before {
                content: "Parsed: ";
             }
             div.restaurant div.dishes {
-               background: #9cf;
-               border-radius: 2em;
-               padding: 0.8em;
-               margin-left: 2em;
+               background    : #9cf;
+               border-radius : 2em;
+               padding       : 0.8em;
+               margin-left   : 2em;
             }
             div.dish {
-               background: #369;
-               color: #dd9;
-               border-radius: 2em;
-               padding: 0.7em;
-               margin-bottom: 0.5em;
+               background    : #369;
+               color         : #dd9;
+               border-radius : 2em;
+               padding       : 0.7em;
+               margin-bottom : 0.5em;
             }
             div.dish h3.name {
-               color: #cf6;
-               font-weight: bold;
-               display: inline;
+               color       : #cf6;
+               font-weight : bold;
+               display     : inline;
             }
             div.dish p.desc {
                display: inline;
             }
             div.dish span.price {
-               font-size: 1.3em;
-               float: right;
+               font-size : 1.3em;
+               float     : right;
             }
             div.dish span.price:after {
                content: ",-";
@@ -137,6 +137,15 @@ __DATA__
             }
             summary:focus {
                outline-style: none;
+            }
+            span.exp {
+               font-size   : 0.6em;
+               margin-left : 35%;
+               color       : #ccc;
+               cursor      : pointer;
+            }
+            span.exp:before {
+               content: "[ expand/collapse ]";
             }
          /*]]>*/
       </style>
@@ -154,6 +163,7 @@ __DATA__
                <summary>
                   <h2 class="name">
                      <a href="<%= $r->{url} %>"><%= $r->{name} %></a>
+                     <span class="exp">&nbsp;</span>
                      <span class="parsed"><%= $dt_fmt %></span>
                   </h2>
                </summary>

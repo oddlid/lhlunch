@@ -139,7 +139,7 @@ __DATA__
                outline-style: none;
             }
             span.exp {
-               font-size   : 0.6em;
+               font-size   : 0.4em;
                margin-left : 5em;
                color       : #ccc;
                cursor      : pointer;

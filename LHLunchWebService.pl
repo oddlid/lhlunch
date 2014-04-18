@@ -5,18 +5,52 @@
 use utf8;
 # Automatically enables strict and warnings + 5.10 features
 use Mojolicious::Lite;
+use Mojo::JSON;
 use DateTime;
-use Data::Dumper;
+#use Data::Dumper;
 use FindBin;
 use Text::Wrap;
 use lib "$FindBin::Bin";
 use LHLunchCache;
 
 my $_lhlc; # delay creation
-my $_nocache = (defined($ENV{LHL_NOCACHE}) ? 1 : 0);
+my $_src; # info string
 
 app->config(hypnotoad => { listen => ['http://*:3000'], proxy => 1 });
 #app->secret(qx(dd if=/dev/urandom bs=512 count=1));
+
+sub slurp_file {
+   # Have a look at the excellent article at http://www.perl.com/pub/2003/11/21/slurp.html
+   # for details on this one
+   local ($/, @ARGV) = (wantarray ? $/ : undef, @_);
+   return <ARGV>;
+}
+
+
+sub _get_src {
+   my $jsrc = $ENV{LHL_JSONSRC};
+
+   if (defined($jsrc) && -r $jsrc) {
+      my $json  = Mojo::JSON->new;
+      my $bytes = slurp_file($jsrc);
+      my $menu  = $json->decode($bytes);
+      my $err   = $json->error;
+      if (!$err) {
+         $_lhlc = LHLunch->new->reload($menu);
+         $_src  = "file://$jsrc";
+      }
+      # maybe do something about the error else...?
+   }
+   elsif (defined($ENV{LHL_NOCACHE})) {
+      $_lhlc = LHLunch->new;
+      $_src  = 'scrape on demand';
+   }
+   else {
+      $_lhlc = LHLunchCache->new($ENV{LHL_STATEDB} // '/tmp/lunchcache.dat');
+      $_src  = 'scrape on demand, cached in: ' . $_lhlc->{cfile};
+   }
+   return $_lhlc;
+}
 
 get '/' => sub {
    my $self = shift;
@@ -25,8 +59,16 @@ get '/' => sub {
 
 get '/lindholmen' => sub {
    my $self = shift;
-   $_lhlc //= ($_nocache ? LHLunch->new : LHLunchCache->new('/tmp/lunchcache.dat'));
-   $self->stash(_lhlc => $_lhlc);
+   # Wondering if the best strategy is to create this instance on each request or just the first time.
+   # Each time means it has the chance to pick up the JSON source file if it was specified at
+   # startup but didn't exist at that time. That way, one can start the webservice normally
+   # and just start up a cron job later that scrapes to the give JSON file, and it will start
+   # to use that.
+   # Add this to the output to see what it picks up:
+   # <!-- Src: <%= $_src %> -->
+   $_lhlc = _get_src;
+
+   $self->stash(_lhlc => $_lhlc, _src => $_src);
 
    $self->respond_to(
       json => { json => { encoding => 'utf8', restaurants => $_lhlc->as_struct } },
@@ -60,6 +102,8 @@ __DATA__
 <!DOCTYPE html>
 <html>
    <head>
+      <!-- Get the perl behind this at: https://github.com/oddlid/lhlunch -->
+      <!-- Src: <%= $_src %> -->
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <title>Lindholmen Lunch</title>
       <style type="text/css" media="screen">
@@ -184,7 +228,6 @@ __DATA__
       </script>
    </head>
    <body>
-      <!-- Get the perl behind this at: https://github.com/oddlid/lhlunch -->
       <div id="content">
          <h1 class="pghdr">Lunch at Lindholmen today <span class="toggledetails" onclick="toggledetail();">[ +/- ]</span></h1>
       % foreach my $r (@$struct) {

@@ -33,7 +33,7 @@ sub scrape {
    # Does a fresh or cached scrape depending of flag --nocache
    # and prints the result as JSON to given filehandle.
    my $fh   = shift;
-   my $lhlc = $_opts->{nocache} ? LHLunch->new : LHLunchCache->new($_opts->{cfile});
+   my $lhlc = $_opts->{nocache} || $ENV{LHL_NOCACHE} ? LHLunch->new : LHLunchCache->new($_opts->{cfile});
    my $json = Mojo::JSON->new;
    $fh->print($json->encode($lhlc->as_struct));
 }
@@ -49,7 +49,11 @@ if ($_opts->{ofile} eq '-') {
    scrape(FileHandle->new_from_fd(\*STDOUT, 'w'));
 }
 else {
-   scrape(FileHandle->new(">$_opts->{ofile}"));
+   # Will do the file handling in some extra steps to ensure minimal time having the dest file open,
+   # to avoid race conditions if the webservice tries to read it simultaneously.
+   my $tmpfile = $_opts->{ofile} . '.tmp';
+   scrape(FileHandle->new(">$tmpfile"));
+   rename($tmpfile, $_opts->{ofile});
 }
 
 __END__

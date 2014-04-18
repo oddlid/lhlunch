@@ -8,6 +8,10 @@ ht=/usr/bin/vendor_perl/hypnotoad
 
 function _start() 
 {
+   # In order to make the webservice load data from a JSON file instead
+   # of scraping directly, set env LHL_JSONSRC to a valid path when calling this script.
+   # If the file does not exist at startup, the webservice will scrape on demand (cached),
+   # but check on each request if the JSON file exists and switch to that if it does.
    MOJO_REACTOR=Mojo::Reactor::Poll $ht $script
 }
 

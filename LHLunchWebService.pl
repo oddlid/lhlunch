@@ -208,7 +208,7 @@ __DATA__
       <script type="text/javascript">
          /*<![CDATA[*/
 
-         var _open = false;
+         var _open = true;
 
          function toggledetail() {
             var ds = document.getElementsByTagName("details");
@@ -235,7 +235,7 @@ __DATA__
          % my $dt = DateTime->from_epoch(epoch => $r->{date}, time_zone => 'Europe/Stockholm');
          % my $dt_fmt = $dt->ymd('-') . ' ' . $dt->hms(':');
          <div class="restaurant">
-            <details>
+            <details open>
                <summary>
                   <h2 class="name">
                      <a href="<%= $r->{url} %>"><%= $r->{name} %></a>

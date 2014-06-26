@@ -16,5 +16,5 @@ INTERVAL=1h
 } &
 
 # Start Mojolicious based webservice
-LHL_JSONSRC=$DS hypnotoad $PWD/LHLunchWebService.pl
+LHL_JSONSRC=$DS hypnotoad -f $PWD/LHLunchWebService.pl
 

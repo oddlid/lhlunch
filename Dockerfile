@@ -1,4 +1,4 @@
-FROM debian:jesse
+FROM debian:jessie
 MAINTAINER Odd E. Ebbesen <oddebb@gmail.com>
 RUN apt-get update && apt-get install -yq libssl-dev curl 
 RUN curl -SL http://cpanmin.us | perl - App::cpanminus

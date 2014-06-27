@@ -5,16 +5,16 @@
 cd $(dirname $0)
 
 DS=/tmp/lhlunch.json
-INTERVAL=1h
+INTERVAL=${1:-1h}
 
 # Run scraper in background, once per $INTERVAL
 {
    while true; do 
-      $PWD/lhlunch_scraper.pl --nocache --output $DS
+      MOJO_REACTOR=Mojo::Reactor::Poll $PWD/lhlunch_scraper.pl --nocache --output $DS
       sleep $INTERVAL
    done
 } &
 
 # Start Mojolicious based webservice
-LHL_JSONSRC=$DS hypnotoad -f $PWD/LHLunchWebService.pl
+LHL_JSONSRC=$DS MOJO_REACTOR=Mojo::Reactor::Poll hypnotoad -f $PWD/LHLunchWebService.pl
 

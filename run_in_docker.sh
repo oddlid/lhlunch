@@ -15,6 +15,6 @@ INTERVAL=${1:-1h}
    done
 } &
 
-# Start Mojolicious based webservice
+# Start Mojolicious based webservice in foreground
 LHL_JSONSRC=$DS MOJO_REACTOR=Mojo::Reactor::Poll hypnotoad -f $PWD/LHLunchWebService.pl
 

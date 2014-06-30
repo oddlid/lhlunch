@@ -14,7 +14,7 @@ RUN pacman-key --init; pacman-key --populate archlinux
 # Update system to latest
 RUN pacman -Syu --noconfirm
 # Install required packages
-RUN pacman --noconfirm -S tar gzip make cpanminus perl-io-socket-ssl perl-datetime perl-ev supervisor procps-ng
+RUN pacman --noconfirm -S tar gzip make cpanminus perl-io-socket-ssl perl-datetime perl-ev supervisor procps-ng nginx
 
 # Add config for starting nginx in the background
 ADD docker_arch_files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -39,10 +39,10 @@ EXPOSE 80
 
 ### Clean up ###
 # Remove unneeded packages that just take up space in the image
-RUN pacman --noconfirm -Rns systemd
+#RUN pacman --noconfirm -Rns systemd
 # Clear out package cache
 #RUN echo y | pacman -Scc --noconfirm
 RUN rm -rf /var/cache/pacman/pkg/*
 
 # supervisord starts nginx and the lhlunch application
-CMD ["/usr/bin/supervisord", "-n"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

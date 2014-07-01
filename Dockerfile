@@ -45,4 +45,4 @@ EXPOSE 80
 RUN rm -rf /var/cache/pacman/pkg/*
 
 # supervisord starts nginx and the lhlunch application
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["./docker_loop.sh"]

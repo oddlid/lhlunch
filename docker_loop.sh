@@ -4,7 +4,7 @@
 # Odd, 2014-07-01 10:15:31
 
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
-/usr/bin/supervisorctl
+/usr/bin/supervisorctl -c /etc/supervisor/conf.d/supervisord.conf
 while true; do
    echo "Detach with CTRL-p CTRL-q. Dropping to shell"
    sleep 1

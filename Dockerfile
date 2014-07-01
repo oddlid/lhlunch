@@ -1,7 +1,8 @@
 FROM scratch
 MAINTAINER Odd E. Ebbesen <oddebb@gmail.com>
 
-# Create basic root FS
+# Create basic root FS - 
+# see archroot_XXXX-XX-XX.txt for instructions on creating it
 ADD archroot_2014-06-01.tar.xz /
 # Customize some system config files
 ADD docker_arch_files/resolv.conf /etc/
@@ -12,9 +13,10 @@ RUN ln -s /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
 # Prepare pacman
 RUN pacman-key --init; pacman-key --populate archlinux
 # Update system to latest
-RUN pacman -Syu --noconfirm
+RUN pacman -Syy; pacman -Syu --noconfirm
 # Install required packages
-RUN pacman --noconfirm -S tar gzip make cpanminus perl-io-socket-ssl perl-datetime perl-ev supervisor procps-ng nginx
+#RUN pacman --noconfirm -S tar gzip make cpanminus perl-io-socket-ssl perl-datetime perl-ev supervisor grep nginx
+RUN pacman --noconfirm -S make cpanminus perl-io-socket-ssl perl-datetime perl-ev supervisor nginx
 
 # Add config for starting nginx in the background
 ADD docker_arch_files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -29,8 +31,14 @@ RUN mkdir /srv/lhlunch; chown http:http /srv/lhlunch
 # Switch to runtime user and change working dir
 USER http
 WORKDIR /srv/lhlunch
-# Get and unpack the application
-RUN curl -L -o - https://github.com/oddlid/lhlunch/tarball/master | tar --strip-components 1 -xzf -
+# Get and unpack the application (could have just added the files directly as well...)
+#RUN curl -L -o - https://github.com/oddlid/lhlunch/tarball/master | tar --strip-components 1 -xzf -
+ADD LHLunch.pm /srv/lhlunch/
+ADD LHLunchCache.pm /srv/lhlunch/
+ADD LHLunchConfig.pm /srv/lhlunch/
+ADD LHLunchWebService.pl /srv/lhlunch/
+ADD lhlunch_scraper.pl /srv/lhlunch/
+ADD run_in_docker.sh /srv/lhlunch/
 # Switch user back to root so supervisord will run privileged later
 USER root
 
@@ -45,4 +53,4 @@ EXPOSE 80
 RUN rm -rf /var/cache/pacman/pkg/*
 
 # supervisord starts nginx and the lhlunch application
-CMD ["./docker_loop.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

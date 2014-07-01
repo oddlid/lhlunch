@@ -236,7 +236,7 @@
 #Server = http://mirror.learn.ac.lk/archlinux/$repo/os/$arch
 
 ## Sweden
-#Server = http://ftp.availo.se/archlinux/$repo/os/$arch
+Server = http://ftp.availo.se/archlinux/$repo/os/$arch
 Server = http://ftp.df.lth.se/pub/archlinux/$repo/os/$arch
 Server = http://ftp.ds.hj.se/pub/os/linux/archlinux/$repo/os/$arch
 Server = http://ftp.lysator.liu.se/pub/archlinux/$repo/os/$arch

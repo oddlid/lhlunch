@@ -13,7 +13,7 @@ use utf8;
 use Getopt::Long;
 use FindBin;
 use FileHandle;
-use Mojo::JSON;
+use Mojo::JSON qw(encode_json);
 
 use lib "$FindBin::Bin";
 use LHLunchCache;
@@ -34,8 +34,7 @@ sub scrape {
    # and prints the result as JSON to given filehandle.
    my $fh   = shift;
    my $lhlc = $_opts->{nocache} || $ENV{LHL_NOCACHE} ? LHLunch->new : LHLunchCache->new($_opts->{cfile});
-   my $json = Mojo::JSON->new;
-   $fh->print($json->encode($lhlc->as_struct));
+   $fh->print(encode_json($lhlc->as_struct));
 }
 
 GetOptions(

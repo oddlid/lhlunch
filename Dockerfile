@@ -16,3 +16,4 @@ EXPOSE 3000
 # docker run -d --name lhlunch -v /tmp/lhlunch:/tmp -p 3000:3000 oddlid/lhlunch 30m
 ENTRYPOINT ["/srv/lhlunch/run_in_docker.sh"]
 #CMD ["/bin/bash", "-l"]
+

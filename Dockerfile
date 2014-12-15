@@ -1,7 +1,7 @@
 FROM perl:latest-threaded
 MAINTAINER Odd E. Ebbesen <oddebb@gmail.com>
 
-ADD docker_bootstrap.sh /root/
+ADD docker_files/docker_bootstrap.sh /root/
 RUN cd /root && chmod 755 ./docker_bootstrap.sh && ./docker_bootstrap.sh
 WORKDIR /srv/lhlunch
 

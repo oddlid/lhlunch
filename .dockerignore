@@ -1,0 +1,4 @@
+.git
+tmp
+webserver.sh
+docker_files/supervisord.conf

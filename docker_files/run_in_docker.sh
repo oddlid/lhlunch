@@ -12,7 +12,7 @@ INTERVAL=${1:-1h}
 {
 	while true; do 
 		HOUR_NOW=$(date +%H)
-		if [[ ( $HOUR_NOW > 7 ) && ( $HOUR_NOW < 12 ) ]]; then
+		if [[ ( $HOUR_NOW -gt 7 ) && ( $HOUR_NOW -lt 12 ) ]]; then
 			echo "Starting scrape at:" $(date --rfc-3339=seconds) >>$LOG
 			$PWD/lhlunch_scraper.pl --nocache --output $DS
 			echo "Scrape done at:" $(date --rfc-3339=seconds) >>$LOG

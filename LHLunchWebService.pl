@@ -31,17 +31,10 @@ sub _get_src {
    my $jsrc = $ENV{LHL_JSONSRC};
 
    if (defined($jsrc) && -r $jsrc) {
-      #my $json  = Mojo::JSON->new;
       my $bytes = slurp_file($jsrc);
       my $menu  = decode_json($bytes);
       $_lhlc = LHLunch->new->reload($menu);
       $_src  = "file://$jsrc";
-      #my $err   = $json->error;
-      #if (!$err) {
-      #   $_lhlc = LHLunch->new->reload($menu);
-      #   $_src  = "file://$jsrc";
-      #}
-      # maybe do something about the error else...?
    }
    elsif (defined($ENV{LHL_NOCACHE})) {
       $_lhlc = LHLunch->new;

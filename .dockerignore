@@ -2,3 +2,9 @@
 tmp
 webserver.sh
 docker_files/supervisord.conf
+README.md
+docker_arch_files
+docker_files/docker_bootstrap.sh
+docker_files/lhlunch_docker.sh
+docker_files/oddlid-docker-lhlunch.sh
+oddlid-docker-lhlunch.sh

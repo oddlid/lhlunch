@@ -1,11 +1,14 @@
-FROM perl:latest-threaded
+FROM oddlid/lobsterperl
 MAINTAINER Odd E. Ebbesen <oddebb@gmail.com>
 
-ADD docker_files/docker_bootstrap.sh /root/
-RUN cd /root && chmod 755 ./docker_bootstrap.sh && ./docker_bootstrap.sh
+COPY LHLunch.pm \
+		 LHLunchCache.pm \
+		 LHLunchConfig.pm \
+		 LHLunchWebService.pl \
+		 lhlunch_scraper.pl \
+		 docker_files/run_in_docker.sh \
+		 /srv/lhlunch/ 
 WORKDIR /srv/lhlunch
-
-ADD LHLunch.pm LHLunchCache.pm LHLunchConfig.pm LHLunchWebService.pl lhlunch_scraper.pl docker_files/run_in_docker.sh /srv/lhlunch/ 
 VOLUME /tmp
 VOLUME /srv/lhlunch
 EXPOSE 3000

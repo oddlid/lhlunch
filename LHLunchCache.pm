@@ -58,7 +58,7 @@ sub cache {
    my $dt_now    = DateTime->now(time_zone => 'floating');
 
    if ($self->{lhl}->ready) {
-      if (!is_fresh($dt_parsed, $dt_now)) {    # midnight has passed
+      if (!is_fresh($dt_parsed, $dt_now)) {    # older than defined in is_fresh()
          $self->{lhl}->clear->scrape;
       }
    }

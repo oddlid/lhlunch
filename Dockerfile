@@ -9,8 +9,7 @@ COPY LHLunch.pm \
 		 docker_files/run_in_docker.sh \
 		 /srv/lhlunch/ 
 WORKDIR /srv/lhlunch
-VOLUME /tmp
-VOLUME /srv/lhlunch
+VOLUME ["/tmp", "/srv/lhlunch"]
 EXPOSE 3000
 
 # You can pass the scan interval as a parameter when launching a container from this image.

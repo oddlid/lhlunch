@@ -71,8 +71,8 @@ my $parser = sub {
 };
 
 our @sources = (
-   {  name   => q/Semcon/,
-      #url    => 'http://www.lindholmen.se/restauranger/lindholmens-matsal-semcon',
+   {  name   => q/Lindholmens Matsal/,
+      #url    => 'http://www.lindholmen.se/restauranger/lindholmens-matsal',
       rid    => 137,
       parser => $parser,
    },

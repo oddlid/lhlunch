@@ -49,6 +49,8 @@ sub _get_src {
 
 get '/' => sub {
    my $self = shift;
+   my $nodeid = $ENV{LHL_NODEID} // 'node_default';
+   $self->stash(_nodeid => $nodeid);
    $self->render('index');
 };
 
@@ -63,7 +65,9 @@ get '/lindholmen' => sub {
    # <!-- Src: <%= $_src %> -->
    $_lhlc = _get_src;
 
-   $self->stash(_lhlc => $_lhlc, _src => $_src);
+   my $nodeid = $ENV{LHL_NODEID} // 'node_default';
+
+   $self->stash(_lhlc => $_lhlc, _src => $_src, _nodeid => $nodeid);
 
    $self->respond_to(
       json => { json => { encoding => 'utf8', restaurants => $_lhlc->as_struct } },
@@ -99,6 +103,7 @@ __DATA__
    <head>
       <!-- Get the perl behind this at: https://github.com/oddlid/lhlunch -->
       <!-- Src: <%= $_src %> -->
+      <!-- NID: <%= $_nodeid %> -->
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <title>Lindholmen Lunch</title>
       <style type="text/css" media="screen">
@@ -258,7 +263,9 @@ __DATA__
 <!DOCTYPE html>
 <html>
    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <title>Lunch</title>
+      <!-- NID: <%= $_nodeid %> -->
    </head>
    <body>
       <%= link_to 'Lindholmen (html)' => 'lindholmen.html' %><br />

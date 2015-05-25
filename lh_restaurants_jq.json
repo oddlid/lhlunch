@@ -1,0 +1,54 @@
+{
+  "Name": "Lindholmen",
+  "Comment": "Were we work",
+  "Restaurants": [
+    {
+      "Name": "Semcon",
+      "Url": "http://www.lindholmen.se/restauranger/lindholmens-matsal"
+    },
+    {
+      "Name": "Bistrot",
+      "Url": "http://www.lindholmen.se/restauranger/bistrot"
+    },
+    {
+      "Name": "Sweet and sour",
+      "Url": "http://www.lindholmen.se/restauranger/sweet-and-sour"
+    },
+    {
+      "Name": "Kooperativet",
+      "Url": "http://www.lindholmen.se/restauranger/kooperativet"
+    },
+    {
+      "Name": "Mimolett",
+      "Url": "http://www.lindholmen.se/restauranger/mimolett"
+    },
+    {
+      "Name": "Äran",
+      "Url": "http://www.lindholmen.se/restauranger/restaurang-aran"
+    },
+    {
+      "Name": "Cuckoo's Nest",
+      "Url": "http://www.lindholmen.se/restauranger/cuckoos-nest"
+    },
+    {
+      "Name": "Tableau",
+      "Url": "http://www.lindholmen.se/restauranger/restaurang-tableau-tv-och-radiohuset"
+    },
+    {
+      "Name": "L's Kitchen",
+      "Url": "http://www.lindholmen.se/restauranger/ls-kitchen"
+    },
+    {
+      "Name": "Encounter Asian Cuisine",
+      "Url": "http://www.lindholmen.se/restauranger/encounter-asian-cuisine"
+    },
+    {
+      "Name": "Gothia",
+      "Url": "http://www.lindholmen.se/restauranger/restaurang-gothia"
+    },
+    {
+      "Name": "Pir 11 (Ericsson-huset)",
+      "Url": "http://www.lindholmen.se/restauranger/pir-11-ericsson-huset"
+    }
+  ]
+}

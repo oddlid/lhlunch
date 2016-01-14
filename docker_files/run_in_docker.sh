@@ -28,7 +28,7 @@ elif [[ "scrape" = $ACTION ]]; then
 	#$PWD/lhlunch_scraper -sitefile $PWD/lh_restaurants_jq.json -output $DS
 	_log "Scrape done"
 else
-	_log "No known action given. Exec: $*"
-	exec $*
+	_log "No known action given. Exec: $@"
+	exec gosu root "$@"
 fi
 

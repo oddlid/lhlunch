@@ -14,5 +14,5 @@ WORKDIR /srv/lhlunch
 VOLUME ["/tmp"]
 EXPOSE 3000
 
-ENTRYPOINT ["/srv/lhlunch/run_in_docker.sh"]
+ENTRYPOINT ["/usr/local/bin/dumb-init", "/srv/lhlunch/run_in_docker.sh"]
 

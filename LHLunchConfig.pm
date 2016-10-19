@@ -101,6 +101,12 @@ our @sources = (
       rid    => 139,
       parser => $parser,
    },
+   {
+      name   => q/Matminnen/,
+      #url    => 'http://www.lindholmen.se/restauranger/matminnen',
+      rid    => 17933,
+      parser => $parser,
+   },
    {  name   => q/Cuckoo's Nest/,
       #url    => 'http://www.lindholmen.se/restauranger/cuckoos-nest',
       rid    => 157,

@@ -14,5 +14,5 @@ WORKDIR /srv/lhlunch
 VOLUME ["/tmp"]
 EXPOSE 3000
 
-ENTRYPOINT ["/usr/local/bin/tini", "-g", "--", "/srv/lhlunch/run_in_docker.sh"]
+ENTRYPOINT ["tini", "-g", "--", "/srv/lhlunch/run_in_docker.sh"]
 

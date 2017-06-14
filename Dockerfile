@@ -7,6 +7,7 @@ COPY \
 		 LHLunchConfig.pm \
 		 LHLunchWebService.pl \
 		 lhlunch_scraper.pl \
+		 lhscrape.bin \
 		 docker_files/run_in_docker.sh \
 		 /srv/lhlunch/ 
 

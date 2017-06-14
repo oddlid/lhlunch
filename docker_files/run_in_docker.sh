@@ -24,8 +24,9 @@ if [[ "serve" = $ACTION ]]; then
 	LHL_JSONSRC=$DS hypnotoad -f $PWD/LHLunchWebService.pl
 elif [[ "scrape" = $ACTION ]]; then
 	_log "Starting scrape..."
-	$PWD/lhlunch_scraper.pl --nocache --output $DS
+	#$PWD/lhlunch_scraper.pl --nocache --output $DS
 	#$PWD/lhlunch_scraper -sitefile $PWD/lh_restaurants_jq.json -output $DS
+	$PWD/lhscrape.bin https://www.lindholmen.se/pa-omradet/dagens-lunch >$DS
 	_log "Scrape done"
 else
 	_log "No known action given. Exec: $@"

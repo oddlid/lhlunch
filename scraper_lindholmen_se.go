@@ -9,10 +9,12 @@ package main
 
 import (
 	"encoding/json"
-	//"fmt"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/Sirupsen/logrus"
 	"io"
+	"os"
+	"strings"
+	"time"
 )
 
 type Dish struct {
@@ -23,14 +25,14 @@ type Dish struct {
 
 type Restaurant struct {
 	Name   string `json:"name"`
-	Url    string `json:"url"`
+	Url    string `json:"url,omitempty"`
 	Dishes []Dish `json:"dishes"`
 	Date   int64  `json:"date"`
 }
 
 type Restaurants []Restaurant
 
-func (r Restaurant) Add(d Dish) {
+func (r *Restaurant) Add(d Dish) {
 	r.Dishes = append(r.Dishes, d)
 }
 
@@ -68,27 +70,51 @@ func scrape(url string) (Restaurants, error) {
 	doc.Find(csel[0]).Each(func(i int, sel1 *goquery.Selection) {
 		rname := sel1.Find("a").Text()
 		log.Debugf("Restaurant: %q", rname)
-		log.Debug("Dish: gris")
-		//sel1.SiblingsFiltered(csel[1]).Each(func(j int, sel2 *goquery.Selection) {
-		//	//dname := sel2.Find(csel[2]).Find(csel[3]).Text()
-		//	ddesc := sel2.Find(csel[2]).Text()
-		//	log.Debugf("Dish: %q", ddesc)
-		//})
+
+		r := &Restaurant{Name: rname, Date: time.Now().Unix(), Url: url}
+
+		sel1.NextAllFiltered(csel[1]).Each(func(j int, sel2 *goquery.Selection) {
+			dname := strings.TrimSpace(sel2.Find(csel[2]).Find(csel[3]).Text())
+			ddesc := strings.TrimSpace(strings.Replace(sel2.Find(csel[2]).Text(), dname, "", 1))
+			dprice := strings.TrimSpace(strings.Replace(sel2.Find(csel[4]).Text(), "kr", "", 1))
+			log.Debugf("Dish: %q", ddesc)
+
+			r.Add(Dish{Name: dname, Desc: ddesc, Price: dprice})
+		})
+
+		rs = append(rs, *r)
 	})
+
+	log.Debugf("%+v", rs)
 
 	return rs, nil
 }
 
 func testscrape() {
 	log.SetLevel(log.DebugLevel)
-	log.SetFormatter(&log.TextFormatter{
-		DisableTimestamp: false,
-		FullTimestamp:    true,
-	})
+	//log.SetFormatter(&log.TextFormatter{
+	//	DisableTimestamp: false,
+	//	FullTimestamp:    true,
+	//})
 
-	scrape("http://localhost")
+	rs, err := scrape("http://localhost")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rs.DumpJSON(os.Stdout, false)
 }
 
 func main() {
-	testscrape()
+	log.SetOutput(os.Stderr)
+	log.SetLevel(log.ErrorLevel)
+
+	//testscrape()
+
+	rs, err := scrape(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rs.DumpJSON(os.Stdout, false)
 }

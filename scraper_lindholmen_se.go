@@ -74,11 +74,11 @@ func scrape(url string) (Restaurants, error) {
 
 		r := &Restaurant{Name: rname, Date: time.Now().Unix(), Url: url}
 
-		sel1.NextAllFiltered(csel[1]).Each(func(j int, sel2 *goquery.Selection) {
+		sel1.NextFilteredUntil(csel[1], csel[0]).Each(func(j int, sel2 *goquery.Selection) {
 			dname := strings.TrimSpace(sel2.Find(csel[2]).Find(csel[3]).Text())
 			ddesc := strings.TrimSpace(strings.Replace(sel2.Find(csel[2]).Text(), dname, "", 1))
 			dprice := strings.TrimSpace(strings.Replace(sel2.Find(csel[4]).Text(), "kr", "", 1))
-			log.Debugf("Dish: %q", ddesc)
+			log.Debugf("Dish: \"%s %s - %s,-\"", dname, ddesc, dprice)
 
 			r.Add(Dish{Name: dname, Desc: ddesc, Price: dprice})
 		})
@@ -86,7 +86,7 @@ func scrape(url string) (Restaurants, error) {
 		rs = append(rs, *r)
 	})
 
-	log.Debugf("%+v", rs)
+	//log.Debugf("%+v", rs)
 
 	return rs, nil
 }
@@ -98,12 +98,12 @@ func testscrape() {
 	//	FullTimestamp:    true,
 	//})
 
-	rs, err := scrape("http://localhost")
+	_, err := scrape("http://localhost")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	rs.DumpJSON(os.Stdout, false)
+	//rs.DumpJSON(os.Stdout, true)
 }
 
 func main() {
@@ -111,6 +111,7 @@ func main() {
 	log.SetLevel(log.ErrorLevel)
 
 	//testscrape()
+	//return
 
 	rs, err := scrape(os.Args[1])
 	if err != nil {

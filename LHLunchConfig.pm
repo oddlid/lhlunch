@@ -39,7 +39,7 @@ sub geturl {
       '[' => '%5B',
       ']' => '%5D',
    );
-   my $url = 'http://www.lindholmen.se/pa-omradet/dagens-lunch?';
+   my $url = 'https://www.lindholmen.se/pa-omradet/dagens-lunch?';
    my $q   = sprintf(
       "type=All&date%svalue%s%syear%s=%d&date%svalue%s%smonth%s=%d&date%svalue%s%sday%s=%d&restaurant=%d",
       $u{'['}, $u{']'},    $u{'['}, $u{']'}, $dt->year, $u{'['}, $u{']'},  $u{'['},

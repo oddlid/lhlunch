@@ -18,7 +18,7 @@ import (
 )
 
 type Dish struct {
-	Name  string `json:"name"`
+	Name  string `json:"dish"`
 	Desc  string `json:"desc"`
 	Price string `json:"price"`
 }
@@ -48,6 +48,7 @@ func (rs Restaurants) DumpJSON(w io.Writer, indent bool) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	jbytes = append(jbytes, '\n')
 	return w.Write(jbytes)
 }
 
@@ -64,7 +65,7 @@ func scrape(url string) (Restaurants, error) {
 
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
-		log.Fatal(err)
+		return rs, err
 	}
 
 	doc.Find(csel[0]).Each(func(i int, sel1 *goquery.Selection) {
@@ -116,5 +117,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	rs.DumpJSON(os.Stdout, false)
+	_, err = rs.DumpJSON(os.Stdout, false)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
